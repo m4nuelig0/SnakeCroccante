@@ -1,0 +1,28 @@
+# Executables
+*.exe
+
+# Compiled files
+*.o
+*.obj
+*.out
+
+# Build directories
+build/
+bin/
+out/
+
+# CMake (if you use it later)
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# IDEs
+.vscode/
+.idea/
+*.cbp
+
+# Debug / logs
+*.log
+*.dmp
+*.tmp
