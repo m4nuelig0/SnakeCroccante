@@ -38,6 +38,7 @@ int main() {
     int pX = 7;
     int pY = 7;
     int score = 0;
+    int highscore = 0;
 
     int frameCounter = 0;
 
@@ -74,29 +75,55 @@ int main() {
             score++;
         }
 
-        if(pX >= gridW || pY >=gridH || pX < 0 || pY < 0) {
-
+        if(pX >= gridW || pY >=gridH || pX < 0 || pY < 0) { // check sconfitta dai muri
             sconfitta = true;
+        }
+
+        if (IsKeyPressed(KEY_ENTER))
+        {
+            sconfitta = false;
+            pX = 7;
+            pY = 7;
+            score = 0;
+            dir = 1;
+            frameCounter = 0;
+            appleSpawn();
         }
 
         BeginDrawing();
         ClearBackground(GREEN);
 
+
         if(sconfitta) {
-            DrawTextCentered(GetFontDefault(), "Game Over", WINDOW_W / 2, WINDOW_H / 2, 50, 2, BLACK);
+            if(score>highscore) {
+                highscore=score;
+            }
+            DrawTextCentered(GetFontDefault(), "Game Over", WINDOW_W / 2, WINDOW_H / 2 -120, 100, 2, BLACK);
+            DrawTextCentered(GetFontDefault(), "Press Enter to restart", WINDOW_W / 2, WINDOW_H / 2, 50, 2, BLACK);
             DrawTextCentered(GetFontDefault(),
                  ("Score: " + std::to_string(score)).c_str(),
                  WINDOW_W / 2,
                  WINDOW_H / 2 + 60,
                  50, 2, BLACK);
-        }
-
+        
+            DrawTextCentered(GetFontDefault(),
+                 ("High Score: " + std::to_string(highscore)).c_str(),
+                 WINDOW_W / 2,
+                 WINDOW_H / 2 + 120,
+                 50, 2, BLACK);
+        } else {
         DrawRectangle(pX * cellSize, pY * cellSize, cellSize, cellSize, BLUE); // snake
         DrawRectangle(aX * cellSize, aY * cellSize, cellSize, cellSize, RED); //apple
+        }
 
+        if(!sconfitta){
+        DrawText(("Score: " + std::to_string(score)).c_str(),
+                  400, 0, 35, BLACK);
+        }
 
         EndDrawing();
     }
+
 
     CloseWindow();
 
