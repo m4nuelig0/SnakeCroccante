@@ -28,8 +28,16 @@ void appleSpawn() { // apple generator
 
 int main() {
     InitWindow(600, 680, "SnakeCroccante");
+    InitAudioDevice();
 
     SetTargetFPS(60);
+    Sound eat1 = LoadSound("assets/eat1.wav");
+    Sound eat2 = LoadSound("assets/eat2.wav");
+    Sound wall = LoadSound("assets/wall.wav");
+    Sound menu = LoadSound("assets/menu.wav");
+    Texture2D logo = LoadTexture("assets/logo.png");
+    Texture2D menubg = LoadTexture("assets/menubg.png");
+    Texture2D gamebg = LoadTexture("assets/gamebg.png");
 
     const int cellSize = 40;
 
@@ -39,6 +47,7 @@ int main() {
     int pY = 7;
     int score = 0;
     int highscore = 0;
+    bool mainmenu = true;
 
     int frameCounter = 0;
 
@@ -48,7 +57,16 @@ int main() {
     
     while (!WindowShouldClose()) {
 
-        frameCounter++;
+        if(!mainmenu)frameCounter++;
+
+        if (mainmenu) // mainmenu
+        {
+            if (IsKeyPressed(KEY_ENTER))
+            {
+                mainmenu = false;
+                PlaySound(menu);
+            }
+        }
 
         if(IsKeyDown(KEY_W) || IsKeyDown(KEY_UP)) dir=1;
         if(IsKeyDown(KEY_S) || IsKeyDown(KEY_DOWN)) dir=3; //player input
@@ -70,13 +88,15 @@ int main() {
         }
     }
 
-        if(pX == aX && pY == aY) {
+        if(pX == aX && pY == aY) { // eating apple
             appleSpawn();
+            PlaySound(eat1);
             score++;
         }
 
-        if(pX >= gridW || pY >=gridH || pX < 0 || pY < 0) { // check sconfitta dai muri
+        if(!sconfitta && (pX >= gridW || pY >=gridH || pX < 0 || pY < 0)) { // check sconfitta dai muri
             sconfitta = true;
+            PlaySound(wall);
         }
 
         if (IsKeyPressed(KEY_ENTER))
@@ -91,9 +111,15 @@ int main() {
         }
 
         BeginDrawing();
-        ClearBackground(GREEN);
+        ClearBackground(WHITE);
 
-
+        if (mainmenu)
+        {   
+            DrawTexture(menubg, 0, 0, WHITE);
+            DrawTextureCentered(logo, WINDOW_W / 2, WINDOW_H / 2, WHITE);
+            DrawTextCentered(GetFontDefault(), "Press ENTER", WINDOW_W / 2, 460, 50, 2, WHITE);
+        } else {
+            DrawTexture(gamebg, 0, 0, WHITE);
         if(sconfitta) {
             if(score>highscore) {
                 highscore=score;
@@ -120,11 +146,17 @@ int main() {
         DrawText(("Score: " + std::to_string(score)).c_str(),
                   400, 0, 35, BLACK);
         }
-
+        }
         EndDrawing();
     }
-
-
+    UnloadSound(eat1);
+    UnloadSound(eat2);
+    UnloadSound(wall);
+    UnloadSound(menu);
+    UnloadTexture(logo);
+    UnloadTexture(menubg);
+    UnloadTexture(gamebg);
+    CloseAudioDevice();
     CloseWindow();
 
     return 0;

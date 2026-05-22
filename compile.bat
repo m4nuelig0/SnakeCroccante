@@ -7,7 +7,7 @@ echo.
  
 if exist SnakeCroccante.exe (
     echo  [*] Removing old executable...
-    del TrisCroccante.exe
+    del SnakeCroccante.exe
 )
  
 echo  [*] Compiling...
