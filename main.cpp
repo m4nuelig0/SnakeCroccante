@@ -65,6 +65,8 @@ int main() {
     Texture2D menubg = LoadTexture("assets/menubg.png");
     Texture2D gamebg = LoadTexture("assets/gamebg.png");
     Music bgm = LoadMusicStream("assets/bgm.ogg");
+    Music bgmr = LoadMusicStream("assets/bgmr.ogg");
+    bool usingBgmr = false;
     PlayMusicStream(bgm);
 
     const int cellSize = 40;
@@ -89,7 +91,7 @@ int main() {
     
     while (!WindowShouldClose()) {
 
-        UpdateMusicStream(bgm);
+        UpdateMusicStream(usingBgmr ? bgmr : bgm);
 
         if(!mainmenu)frameCounter++;
 
@@ -99,6 +101,12 @@ int main() {
             {
                 mainmenu = false;
                 PlaySound(menu);
+            }
+            if (IsKeyPressed(KEY_SPACE) && !usingBgmr) // premi spazio -> switcha a bgmr
+            {
+                StopMusicStream(bgm);
+                PlayMusicStream(bgmr);
+                usingBgmr = true;
             }
         }
 
@@ -218,6 +226,7 @@ int main() {
     UnloadTexture(menubg);
     UnloadTexture(gamebg);
     UnloadMusicStream(bgm);
+    UnloadMusicStream(bgmr);
     CloseAudioDevice();
     CloseWindow();
 
